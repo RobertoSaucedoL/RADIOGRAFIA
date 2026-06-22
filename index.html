@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radiografía Porta · Ene–May 2026 (interactiva)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--navy:#15212F;--corp:#2E3A47;--grey:#8296A9;--orange:#D98918;--bg:#F4F6F8;--card:#fff;--line:#E2E8EE;--ink:#222B33;--teal:#2E6E8E;--soft:#EEF1F4;--crit:#C0392B}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+a{text-decoration:none;color:inherit}.layout{display:flex;min-height:100vh}
+.side{width:248px;background:var(--navy);color:#cdd6df;position:fixed;top:0;bottom:0;left:0;padding:20px 0;overflow-y:auto;z-index:20}
+.side .brand{padding:0 22px 14px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.side .brand h1{font-size:28px;font-weight:800;color:#fff;letter-spacing:1px}
+.side .brand span{font-size:10px;color:var(--orange);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.side nav a{display:flex;gap:9px;padding:9px 22px;font-size:12.5px;font-weight:500;color:#aeb9c4;border-left:3px solid transparent}
+.side nav a:hover{background:rgba(255,255,255,.05);color:#fff}.side nav a.active{background:rgba(217,137,24,.12);color:#fff;border-left-color:var(--orange)}
+.side nav a .n{font-size:10px;color:var(--grey);width:18px}
+.side .foot{padding:14px 22px;font-size:9.5px;color:#6f7e8c;border-top:1px solid rgba(255,255,255,.08);margin-top:8px}
+.main{margin-left:248px;flex:1}
+.topbar{background:linear-gradient(120deg,var(--navy),var(--corp));color:#fff;padding:30px 44px}
+.topbar h2{font-size:28px;font-weight:800}.topbar .sub{color:#b9c4cf;font-size:13px;margin-top:6px;max-width:920px}
+.topbar .meta{margin-top:12px;display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:#9fb0bd}
+.wrap{padding:26px 44px 70px}section{margin-bottom:42px;scroll-margin-top:14px}
+.sec-h{display:flex;align-items:center;gap:12px;margin:6px 0 14px}.sec-h .bar{width:6px;height:25px;background:var(--orange);border-radius:3px}
+.sec-h h3{font-size:20px;font-weight:800;color:var(--navy)}.sec-h .tag{margin-left:auto;font-size:10.5px;color:var(--grey);font-weight:600;text-transform:uppercase}
+.verdict{background:#fff;border-left:5px solid var(--orange);border-radius:10px;padding:14px 18px;box-shadow:0 1px 3px rgba(20,33,47,.06);margin-bottom:15px;font-size:13.5px}.verdict b{color:var(--orange)}
+.grid{display:grid;gap:14px}.cards{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(20,33,47,.05)}
+.kpi .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--grey);font-weight:600}
+.kpi .val{font-size:24px;font-weight:800;color:var(--navy);margin-top:3px}.kpi .delta{font-size:11px;font-weight:600;margin-top:2px}
+.kpi.alert{border-top:3px solid var(--orange)}.kpi.alert .val{color:var(--orange)}.kpi.good{border-top:3px solid var(--teal)}.kpi.good .val{color:var(--teal)}
+.down{color:var(--crit)}.up{color:var(--teal)}.warn{color:var(--orange)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(20,33,47,.05)}
+.card h4{font-size:14.5px;font-weight:700;color:var(--corp);margin-bottom:3px}.card .csub{font-size:11px;color:var(--grey);margin-bottom:10px}
+.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:1fr 1fr 1fr}
+.chart-box{position:relative;height:285px}.chart-box.tall{height:345px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:7px 9px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:var(--corp);color:#fff;font-weight:600;font-size:10.5px;text-transform:uppercase}
+tr:nth-child(even) td{background:#F7F9FB}td.r,th.r{text-align:right}td.c,th.c{text-align:center}
+.neg{color:var(--crit);font-weight:700}.posv{color:var(--teal);font-weight:600}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:600}
+.pill.o{background:#FBEBD4;color:#a5660f}.pill.t{background:#DCEAF0;color:#1f5066}.pill.g{background:#E6ECF1;color:var(--corp)}
+.pill.push{background:#DCEFE6;color:#1f5c3a}.pill.hold{background:#FBEBD4;color:#a5660f}.pill.risk{background:#F6DAD5;color:#9c3b1b}
+.note{font-size:10.5px;color:var(--grey);margin-top:9px;font-style:italic}
+ul.clean{list-style:none}ul.clean li{padding:6px 0 6px 21px;position:relative;font-size:12.5px;border-bottom:1px solid var(--soft)}
+ul.clean li:before{content:"\25B8";position:absolute;left:0;color:var(--orange);font-weight:700}
+.cmp{display:flex;gap:10px;flex-wrap:wrap}.cmp .b{flex:1;min-width:115px;text-align:center;padding:11px;border-radius:10px;border:1px solid var(--line)}
+.cmp .b .y{font-size:10.5px;color:var(--grey);font-weight:600}.cmp .b .v{font-size:21px;font-weight:800;color:var(--navy)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px}.chips .lab{font-size:10.5px;color:var(--grey);font-weight:700;text-transform:uppercase;align-self:center;margin-right:4px;min-width:64px}
+.chip{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--corp);transition:.12s}
+.chip:hover{border-color:var(--orange)}.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chip.canal.on{background:var(--teal);border-color:var(--teal)}.chip.seg.on{background:var(--orange);border-color:var(--orange)}.chip.kam.on{background:var(--corp);border-color:var(--corp)}
+.photogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;margin-top:6px}
+.photo{border:2px dashed #c3ccd6;border-radius:10px;padding:13px 9px;text-align:center;background:#fafbfc;min-height:110px;display:flex;flex-direction:column;justify-content:center;gap:5px}
+.photo .ic{font-size:22px}.photo .t{font-size:11px;font-weight:600;color:var(--corp)}.photo .d{font-size:10px;color:var(--grey)}
+@media(max-width:880px){.side{width:100%;position:relative;height:auto}.main{margin-left:0}.two,.three{grid-template-columns:1fr}.wrap,.topbar{padding-left:18px;padding-right:18px}}
+</style></head><body><div class="layout">
+<aside class="side"><div class="brand"><h1>PORTA</h1><span>Radiografía interactiva</span></div>
+<nav id="nav">
+<a href="#resumen"><span class="n">01</span> Resumen ejecutivo</a>
+<a href="#explorador"><span class="n">02</span> Explorador interactivo</a>
+<a href="#contexto"><span class="n">03</span> Contexto de mercado</a>
+<a href="#canal"><span class="n">04</span> Canal vs presupuesto</a>
+<a href="#cliente"><span class="n">05</span> Clientes · nuestros y su mercado</a>
+<a href="#producto"><span class="n">06</span> Por producto</a>
+<a href="#inventario"><span class="n">07</span> Inventario de seguridad</a>
+<a href="#profundo"><span class="n">08</span> Inventario a profundidad</a>
+<a href="#moldes"><span class="n">09</span> Moldes</a>
+<a href="#competencia"><span class="n">10</span> Competencia</a>
+<a href="#plan"><span class="n">11</span> Plan de acción</a>
+</nav>
+<div class="foot">Ene–May 2026 · Anclada al ER (uso interno) · Confidencial</div></aside>
+<main class="main">
+<div class="topbar"><h2>RADIOGRAFÍA COMERCIAL HOLÍSTICA</h2>
+<div class="sub">Dashboard interactivo: filtra por canal, KAM o segmento y todo se mueve. Comparativos vs año anterior y vs presupuesto. Periodo Enero–Mayo 2026.</div>
+<div class="meta"><span>📊 Looker</span><span>📦 Sheet Inventario</span><span>🌎 Mercado + clientes</span><span>🗓️ 17-jun-2026</span></div></div>
+<div class="wrap">
+
+<section id="resumen"><div class="sec-h"><div class="bar"></div><h3>01 · Resumen ejecutivo</h3><span class="tag">Veredicto primero</span></div>
+<div class="verdict"><b>Veredicto.</b> Porta no tiene problema de margen bruto (53.2% interno). Tiene un problema de <b>escala, gastos y capital</b>. La prioridad no es vender más: es vender mejor, cobrar más rápido y comprometer menos capital.</div>
+<div class="card" style="margin-bottom:14px"><h4>Venta neta — tres lentes (Ene–May)</h4>
+<div class="cmp">
+<div class="b"><div class="y">2025 real</div><div class="v">$58.1 M</div></div>
+<div class="b" style="border-color:var(--crit)"><div class="y">2026 real</div><div class="v">$56.4 M</div><div class="down" style="font-size:11px;font-weight:700">▼ −3.0% YoY</div></div>
+<div class="b" style="border-color:var(--orange)"><div class="y">vs Plan ($68.7M)</div><div class="v">−18%</div></div>
+<div class="b" style="border-color:var(--teal)"><div class="y">Margen bruto</div><div class="v">53.2%</div><div class="up" style="font-size:11px;font-weight:700">sano</div></div>
+</div></div>
+<div class="grid cards">
+<div class="kpi good"><div class="lbl">Margen bruto</div><div class="val">53.2%</div></div>
+<div class="kpi alert"><div class="lbl">EBITDA</div><div class="val">8.8%</div><div class="delta down">meta 30%</div></div>
+<div class="kpi alert"><div class="lbl">RAC neto</div><div class="val">−0.5</div><div class="delta down">no remunera</div></div>
+<div class="kpi alert"><div class="lbl">GM ROI</div><div class="val">$0.8</div><div class="delta down">bajo 1.0</div></div>
+<div class="kpi alert"><div class="lbl">DSO</div><div class="val">81 d</div></div>
+
+<div class="kpi alert"><div class="lbl">Concentración Top-2</div><div class="val">~74%</div></div>
+<div class="kpi alert"><div class="lbl">Inv. aguas arriba</div><div class="val">71%</div></div>
+</div></section>
+
+<section id="explorador"><div class="sec-h"><div class="bar"></div><h3>02 · Explorador interactivo</h3><span class="tag">Clic y todo se mueve</span></div>
+<div class="verdict"><b>Cómo usarlo.</b> Elige una vista — Global, un canal, un KAM o un segmento — y las tarjetas, el gráfico y la lectura se actualizan. Cifras direccionales dentro del marco del ER (venta = participación × venta neta $56.4 M).</div>
+<div class="card">
+<div class="chips"><span class="lab">Vista</span><span class="chip on" data-v="Global">Global</span></div>
+<div class="chips"><span class="lab">Canal</span><span class="chip canal" data-v="Retail">Retail</span><span class="chip canal" data-v="Mayoreo">Mayoreo</span><span class="chip canal" data-v="Catálogo">Catálogo</span></div>
+<div class="chips"><span class="lab">Segmento</span><span class="chip seg" data-v="Hidratación">Hidratación</span><span class="chip seg" data-v="Cocina">Cocina</span><span class="chip seg" data-v="Organización">Organización</span></div>
+<div class="chips"><span class="lab">KAM</span><span class="chip kam" data-v="E. Espinosa">E. Espinosa</span><span class="chip kam" data-v="H. Juárez">H. Juárez</span><span class="chip kam" data-v="J. Leónides">J. Leónides</span><span class="chip kam" data-v="V. Rojo">V. Rojo</span></div>
+<div class="chips"><span class="lab">Cliente</span><span class="chip cli" data-v="Prichos">Prichos</span><span class="chip cli" data-v="Nueva Walmart">Nueva Walmart</span><span class="chip cli" data-v="Tiendas Tres B">Tres B</span><span class="chip cli" data-v="Avon">Avon</span><span class="chip cli" data-v="Chedraui">Chedraui</span><span class="chip cli" data-v="Soriana">Soriana</span><span class="chip cli" data-v="Casa Ley">Casa Ley</span><span class="chip cli" data-v="House of Fuller">Fuller</span><span class="chip cli" data-v="Grupo Comercial DSW">DSW</span><span class="chip cli" data-v="Gutza Import">Gutza</span><span class="chip cli" data-v="Óscar Granados">Óscar Granados</span></div>
+<hr style="border:none;border-top:1px solid var(--line);margin:14px 0">
+<h4 id="expTitle" style="font-size:17px">Global — negocio total</h4><div class="csub" id="expSub">Ene–May 2026</div>
+<div class="grid cards" id="expKpis" style="margin-bottom:14px"></div>
+<div class="grid two">
+<div><div class="chart-box"><canvas id="expChart"></canvas></div></div>
+<div><div id="expDetalle"></div><div class="verdict" id="expLectura" style="margin-top:10px;margin-bottom:0;font-size:12.5px"></div></div>
+</div></div></section>
+
+<section id="contexto"><div class="sec-h"><div class="bar"></div><h3>03 · Contexto de mercado</h3><span class="tag">Del mundo a México</span></div>
+<div class="verdict"><b>Veredicto.</b> Entorno exigente (consumidor selectivo; proximidad/valor crecen, discrecional cae), pero el <b>arancel a importaciones de China</b> inclina la cancha a favor del fabricante nacional. Mejor ventana en años.</div>
+<div class="grid two">
+<div class="card"><h4>Arancel 2026 (vigente 1-ene)</h4>
+<div class="grid cards" style="grid-template-columns:1fr 1fr"><div class="kpi alert"><div class="lbl">Botellas/cantimploras</div><div class="val">+35%</div><div class="delta warn">China</div></div><div class="kpi alert"><div class="lbl">Hogar/cocina plástico</div><div class="val">+20%</div><div class="delta warn">núcleo Porta</div></div></div>
+<ul class="clean" style="margin-top:11px"><li>Encarece a Contigo, Cool Gear y marca propia de Walmart.</li><li>Oportunidad de sustitución de importaciones "Hecho en México".</li></ul></div>
+<div class="card"><h4>Termómetro retail 2026</h4><table>
+<tr><td>ANTAD mismas tiendas (abr)</td><td class="r posv">+4.4%</td></tr>
+<tr><td>Walmart 1T / Tiendas 3B SSS</td><td class="r posv">+3.1% / +18%</td></tr>
+<tr><td>Chedraui Méx / OXXO</td><td class="r posv">+2.7% / +6%</td></tr>
+<tr><td>Soriana</td><td class="r neg">−2.7%</td></tr>
+<tr><td>Liverpool / Suburbia</td><td class="r neg">−2.5% / −3.1%</td></tr>
+<tr><td>Inflación / Resina</td><td class="r">4.1% / alcista</td></tr></table>
+<div class="note">Proximidad/valor ganan; discrecional pierde. El crecimiento viene del ticket, no del tráfico.</div></div></div></section>
+
+<section id="canal"><div class="sec-h"><div class="bar"></div><h3>04 · Canal vs presupuesto</h3><span class="tag">Empezamos por canales</span></div>
+<div class="verdict"><b>Veredicto.</b> Retail (HD+Retail) cerca del plan (−10%), pero <b>Mayoreo (−54%) y Catálogo (−61%) se desploman</b>. El faltante vs presupuesto está fuera de Retail.</div>
+<div class="grid two">
+<div class="card"><h4>Ventas netas por canal — Real vs Plan</h4><div class="csub">$M · real estimado (reconcilia a ER $56.4M)</div><div class="chart-box"><canvas id="channelBar"></canvas></div></div>
+<div class="card"><h4>Detalle por canal</h4><table><thead><tr><th>Canal</th><th class="r">Plan</th><th class="r">Real est.</th><th class="r">vs Plan</th></tr></thead><tbody>
+<tr><td>Retail (HD+Retail)</td><td class="r">$57.05M</td><td class="r">$51.4M</td><td class="r neg">−10%</td></tr>
+<tr><td>Mayoreo</td><td class="r">$6.77M</td><td class="r">$3.1M</td><td class="r neg">−54%</td></tr>
+<tr><td>Catálogo</td><td class="r">$4.91M</td><td class="r">$1.9M</td><td class="r neg">−61%</td></tr>
+<tr><td><b>TOTAL</b></td><td class="r"><b>$68.7M</b></td><td class="r"><b>$56.4M</b></td><td class="r neg"><b>−18%</b></td></tr></tbody></table>
+<ul class="clean" style="margin-top:8px"><li>Retail: proteger anaquel y rentabilidad (motor).</li><li>Mayoreo: piso de precio por SKU (F10).</li><li>Catálogo: abrir 2 clientes (reducir dependencia de Avon 91%).</li></ul></div></div></section>
+
+<section id="cliente"><div class="sec-h"><div class="bar"></div><h3>05 · Clientes — nuestros y su mercado</h3><span class="tag">¿Están creciendo?</span></div>
+<div class="verdict"><b>Veredicto.</b> Dos clientes ≈74% del ingreso (Prichos ~50%, Nueva Walmart ~24%). La buena noticia: nuestros mayores clientes <b>están creciendo en el mercado</b> (Walmart +3.1%, Tiendas 3B +18%, Chedraui +2.7%). El riesgo está en los contraídos (Soriana, Liverpool/Suburbia) y en la cola que destruye margen (Óscar Granados).</div>
+<div class="grid two">
+<div class="card"><h4>Concentración de cliente</h4><div class="csub">participación en venta (vista tablero)</div><div class="chart-box"><canvas id="clientPie"></canvas></div></div>
+<div class="card"><h4>Calidad de margen por cliente</h4><div class="csub">margen neto (incluye gasto 30% asumido)</div><div class="chart-box"><canvas id="clientMargin"></canvas></div></div></div>
+<div class="card" style="margin-top:14px"><h4>Nuestros clientes y cómo van en el mercado</h4>
+<table><thead><tr><th>Cliente</th><th class="r">Venta 2026</th><th class="c">Peso 26</th><th class="c">Peso 25</th><th class="r">Margen 26</th><th class="r">SSS mercado</th><th class="c">Acción</th></tr></thead><tbody id="clientMarket"></tbody></table>
+<div class="note">Venta 2026 = ventas reales Ene–May (Looker, reconcilia al total $64M). Peso 26 vs 25 = participación en nuestra venta (real; 2025 año completo). SSS mercado = ventas mismas tiendas del cliente 2025–1T26 (fuentes públicas). "—" = dato no público (Casa Ley, Fuller, DSW): levantar con comercial. Liverpool/Suburbia no son clientes de Porta (son contexto de mercado, ver Contexto).</div></div></section>
+
+<section id="producto"><div class="sec-h"><div class="bar"></div><h3>06 · Por producto</h3><span class="tag">Ganadores vs sin margen</span></div>
+<div class="verdict"><b>Veredicto.</b> Ganadores de buen margen (mimbre/Copal, Kool, Gari, Muuk) y una cola que no cubre su gasto. La <b>Botella Peek 1L (PET) es #1 en venta pero no cubre overhead</b>; la Jarra 2L va peor. El PET es problema estructural de margen.</div>
+<div class="card"><h4>Mapa de burbuja — venta vs margen neto</h4><div class="csub">X: venta ($M) · Y: margen neto % (con gasto 30%) · tamaño: utilidad · naranja = no cubre gasto</div><div class="chart-box tall"><canvas id="bubble"></canvas></div></div>
+<div class="grid two" style="margin-top:14px">
+<div class="card"><h4 class="posv">Ganadores</h4><table><thead><tr><th>Producto</th><th class="r">Venta</th><th class="r">Margen</th></tr></thead><tbody id="winTable"></tbody></table></div>
+<div class="card"><h4 class="neg">No cubren su gasto</h4><table><thead><tr><th>Producto</th><th class="r">Venta</th><th class="r">Margen</th></tr></thead><tbody id="loseTable"></tbody></table>
+<div class="note">Bajar costo o renegociar precio de Peek PET y Jarra 2L (~$18M); mantener stock por volumen (no es opción salir). Escalar nichos: Maxi bite SKL 56%, Base celular 45%, Animalitos ZOO 39%.</div></div></div></section>
+
+<section id="inventario"><div class="sec-h"><div class="bar"></div><h3>07 · Inventario de seguridad</h3><span class="tag">Prioridad por VOLUMEN</span></div>
+<div class="verdict"><b>Veredicto.</b> El stock de seguridad se prioriza por <b>volumen de venta</b> — las anclas de ingreso no deben quebrar (quiebre = venta perdida + OTIF Walmart). Alto margen: solo cuidar cobertura.</div>
+<div class="grid two">
+<div class="card"><h4>Anclas de volumen (no deben quebrar)</h4><div class="csub">cobertura = existencia/ventas · naranja = urgente</div><div class="chart-box"><canvas id="volBar"></canvas></div></div>
+<div class="card"><h4>Las dos canastas</h4><table><thead><tr><th>Ancla volumen</th><th class="r">Pzs vend.</th><th class="r">Cob.</th></tr></thead><tbody>
+<tr><td>Botella Peek 1L (PET)</td><td class="r">1,305,000</td><td class="r">0.43</td></tr>
+<tr><td>Base ondas 600/1L</td><td class="r">1,075,931</td><td class="r neg">0.056</td></tr>
+<tr><td>Canastilla mimbre</td><td class="r">906,163</td><td class="r neg">0.087</td></tr>
+<tr><td>Elefantito/Animalitos ZOO</td><td class="r">713,204</td><td class="r warn">0.12</td></tr>
+<tr><td>Jarra 2L Ovalada</td><td class="r">631,776</td><td class="r warn">0.247</td></tr></tbody></table>
+<div class="note" style="margin-top:7px"><b>Alto margen, solo cobertura:</b> Portautensilios mimbre, Charola Ice, Gari, Quesa-bite, Click, Creta. <b>Liquidar (F4):</b> Viandera Verde (291×), Luuk 1000ml (9.4×), Jarra 3L (3.7×).</div></div></div></section>
+
+<section id="profundo"><div class="sec-h"><div class="bar"></div><h3>08 · Inventario a profundidad</h3><span class="tag">¿Dónde está el capital?</span></div>
+<div class="verdict"><b>Veredicto.</b> Capital <b>atrapado aguas arriba</b>: Producto Final solo <b>$6.7M (20%)</b> de $33.9M; Materia Prima ($12.7M) + Semiterminado ($11.3M) = <b>$24.0M (71%)</b>. Liberar caja exige atacar MP + semiterminado, no solo PT.</div>
+<div class="grid two">
+<div class="card"><h4>Inventario por categoría (mayo)</h4><div class="chart-box"><canvas id="catPie"></canvas></div></div>
+<div class="card"><h4>Tendencia total (balance)</h4><div class="chart-box"><canvas id="catTrend"></canvas></div><div class="note">Mar $29.9M → Abr $34.8M → May $33.9M. PF nunca &gt;20%: el problema es proceso/insumo. Bodega: CAJAPLAX $3.1M, CIELO $1.1M.</div></div></div></section>
+
+<section id="moldes"><div class="sec-h"><div class="bar"></div><h3>09 · Moldes</h3><span class="tag">Colocación, no rentabilidad</span></div>
+<div class="verdict"><b>Veredicto.</b> Margen en proyección (~50%) pero volumen 39–43% abajo y ROI 0.4× vs 2.2×. El semiterminado atrapado es la otra cara de los moldes tardíos. Gate CFO (F6) antes de CAPEX Cube/Balance (~$40M).</div>
+<div class="grid two">
+<div class="card"><h4>Proyección vs Real</h4><div class="chart-box"><canvas id="moldChart"></canvas></div></div>
+<div class="card"><h4>Lectura</h4><div class="grid cards" style="grid-template-columns:1fr 1fr"><div class="kpi alert"><div class="lbl">ROI real</div><div class="val">0.4×</div><div class="delta down">obj 2.2×</div></div><div class="kpi good"><div class="lbl">Margen molde</div><div class="val">50.2%</div></div><div class="kpi"><div class="lbl">Inversión</div><div class="val">$10.8M</div></div></div>
+<ul class="clean" style="margin-top:10px"><li>Rezago: Kawaii Rex/Unicornio, Organizador Ice, Charola Ice.</li><li>Bien: Canastilla mimbre, Click, Creta, Portautensilios mimbre.</li></ul></div></div></section>
+
+<section id="competencia"><div class="sec-h"><div class="bar"></div><h3>10 · Competencia</h3><span class="tag">Walmart Tepeyac</span></div>
+<div class="verdict"><b>Veredicto.</b> El verdadero competidor es la combinación de <b>marca importada de China + marca propia del retailer</b>. El arancel 2026 erosiona su ventaja. Yuliana es el rival nacional más parecido (mejor digital, pero importa parte → expuesto al arancel); Cubasa compite por escala, no hidratación.</div>
+<div class="grid two">
+<div class="card"><h4>Cuota de anaquel — Walmart Tepeyac (el más grande de Latinoamérica)</h4><div class="csub">frentes por marca · estimación visual de campo</div><div class="chart-box"><canvas id="shareBar"></canvas></div><div class="note">Porta ~5–10% de frentes; el resto importado + marca propia.</div></div>
+<div class="card"><h4>Mapa competitivo</h4><table><thead><tr><th>Competidor</th><th>Origen</th><th>Posición</th></tr></thead><tbody>
+<tr><td>Contigo (Newell)</td><td>China</td><td>Premium $259–369 · +35%</td></tr>
+<tr><td>Cool Gear</td><td>China</td><td>Económico · +35%</td></tr>
+<tr><td>Great Value/Mainstays</td><td>China/Asia</td><td>Marca propia</td></tr>
+<tr><td class="neg">Yuliana</td><td>MX + importa</td><td>Rival directo $75–299</td></tr>
+<tr><td>Cubasa</td><td>MX (60 años)</td><td>Escala; no hidratación</td></tr></tbody></table>
+<div class="note"><b>Jugada:</b> hidratación en el espacio medio + "Hecho en México" a cadenas, aprovechando el arancel. Asegurar resina.</div></div></div>
+<div class="card" style="margin-top:14px"><h4>Evidencia de anaquel — store check (fotos)</h4><div class="csub">Hallazgos por toma. Las imágenes reales se incrustan al subirlas como archivo (ver nota).</div>
+<div class="photogrid">
+<div class="photo"><div class="ic">🧴</div><div class="t">Contigo (China)</div><div class="d">$369/$259 · Tritan</div></div>
+<div class="photo"><div class="ic">🟠</div><div class="t">Porta en anaquel</div><div class="d">pocos frentes</div></div>
+<div class="photo"><div class="ic">🟠</div><div class="t">Porta (3 zonas)</div><div class="d">cuota ~5–10%</div></div>
+<div class="photo"><div class="ic">🇨🇳</div><div class="t">Contigo fondo</div><div class="d">"Hecho en China"</div></div>
+<div class="photo"><div class="ic">🇨🇳</div><div class="t">Cool Gear 946ml</div><div class="d">"Hecho en China"</div></div>
+<div class="photo"><div class="ic">🍽️</div><div class="t">Platos/vasos $20</div><div class="d">importado</div></div>
+<div class="photo"><div class="ic">🇨🇳</div><div class="t">Plato "celebrate!"</div><div class="d">marca Walmart, China</div></div>
+</div>
+<div class="note">Para incrustar las imágenes reales: <b>arrástralas al chat como archivo</b> o guárdalas en <b>H:\Mi unidad\Obsidian Vault\Porta\Competencia\fotos\</b>.</div></div></section>
+
+<section id="plan"><div class="sec-h"><div class="bar"></div><h3>11 · Plan de acción</h3><span class="tag">Próximos 90 días</span></div>
+<div class="verdict"><b>Síntesis.</b> Margen bruto sano (53.2%); el reto es escala, gastos y capital. Empujar los clientes que crecen (3B, Walmart, Chedraui), de-riskear los contraídos, y blindar caja.</div>
+<div class="card"><table><thead><tr><th>Plazo</th><th>Frente</th><th>Acción</th><th>Resultado</th></tr></thead><tbody>
+<tr><td><span class="pill o">0–30 d</span></td><td>Caja</td><td>Factoraje WM (F1) + comisiones sobre cobrado (F3) + cobranza escalada (F2)</td><td>Bajar DSO · +$4–6M</td></tr>
+<tr><td><span class="pill o">0–30 d</span></td><td>Gastos</td><td>Control de fletes (≈3× Feb→May) y gasto variable; alinear al ER</td><td>Subir EBITDA del 8.8%</td></tr>
+<tr><td><span class="pill o">0–30 d</span></td><td>Producto</td><td>Bajar costo o renegociar precio de Peek PET y Jarra 2L (mantener stock; no es opción salir)</td><td>Frenar ~$18M sin overhead</td></tr>
+<tr><td><span class="pill t">0–60 d</span></td><td>Clientes</td><td>Empujar 3B / Walmart / Chedraui (sanos); de-risk Soriana y Liverpool/Suburbia</td><td>Crecer en canal sano</td></tr>
+<tr><td><span class="pill t">0–60 d</span></td><td>Inventario</td><td>Anclas de volumen; drenar MP+semiterminado (71%); liquidar muertos (F4)</td><td>Evitar quiebres · +$4–6M</td></tr>
+<tr><td><span class="pill g">0–90 d</span></td><td>Moldes</td><td>Gate CFO (F6) antes de CAPEX; reactivar moldes que venden</td><td>Proteger caja · subir ROI</td></tr>
+
+</tbody></table></div>
+<div class="note">Financieros anclados al ER oficial (uso interno). Desgloses Looker direccionales (gasto 30%). Venta por canal/cliente = mix × venta neta ER. SSS de clientes: fuentes públicas 2025–1T26.</div></section>
+
+</div></main></div>
+<script>
+const C={navy:'#15212F',corp:'#2E3A47',grey:'#8296A9',orange:'#D98918',teal:'#2E6E8E',crit:'#C0392B'};
+// ---------- DATA ----------
+const clients=[['Prichos',49.8,16.4,'$13.9','Retail'],['Nueva Walmart',24.0,11.95,'$17.4','Retail'],['Tiendas Tres B',9.0,20.8,'$15.2','Retail'],['Avon',4.0,20.5,'$22.0','Catálogo'],['Tiendas Chedraui',3.0,8.1,'$11.9','Retail'],['Mercadotecnia',2.5,16.1,'$14.8','Mayoreo'],['Grupo Comercial DSW',2.0,29.4,'$20.8','Mayoreo'],['Gutza Import',2.0,16.4,'$16.7','Mayoreo'],['Óscar Granados',1.5,-14.8,'$9.5','Mayoreo']];
+const market=[
+ ['Prichos / Walmart','$31.8M','49.8%','44.9%','16.0%','+3.1%','push','Sano; subió peso'],
+ ['Nueva Walmart','$15.4M','24.0%','23.5%','7.5%','+3.1%','push','Volumen; margen cayó a 7.5%'],
+ ['Tiendas Tres B','$4.6M','7.1%','9.4%','23.9%','+18%','push','Crece en mercado; perdimos peso'],
+ ['Mercadotecnia en Punto','$2.0M','3.1%','nuevo','16.1%','—','push','Cliente nuevo 2026'],
+ ['Avon (Catálogo)','$1.7M','2.7%','5.5%','28.9%','reestr.','hold','Cae fuerte; Avon en reestructura'],
+ ['Tiendas Chedraui','$1.6M','2.5%','3.9%','17.6%','+2.7%','push','Mejoró margen; perdimos peso'],
+ ['Grupo Comercial DSW','$0.9M','1.4%','0.6%','29.8%','—','push','Mejor margen; creció'],
+ ['Gutza Import','$0.9M','1.5%','0.7%','16.7%','—','hold','Mayoreo; creció'],
+ ['Tiendas Soriana','$0.7M','1.0%','2.8%','22.8%','−2.7%','risk','Cae + mercado contraído'],
+ ['House of Fuller','$0.6M','0.9%','1.1%','37.6%','—','hold','Catálogo premium; s/dato'],
+ ['Casa Ley','$0.4M','0.6%','1.7%','42.8%','—','hold','Mejor margen; cae; s/dato'],
+ ['Óscar Granados','$0.7M','1.0%','0.3%','−33%','—','risk','Destruye margen; congelar (F10)']];
+const winners=[['Portautensilios mimbre',7.0,23.4],['Botella Elefantito ZOO',6.5,23.1],['Canastilla mimbre',8.1,17.4],['Botella Creta',7.2,16.9],['Charola multiusos Ice',6.0,20.0],['Botella Kool 1lt',3.9,29.1],['Botella Gari (Ekuora)',4.3,21.1],['Botella Muuk 1.5lt',2.2,27.6]];
+const losers=[['Botella Peek 1L (PET) #1 venta',11.8,-0.58],['Jarra 2L Ovalada',6.2,-4.12],['Botellín PET 800ml',0.24,-25.6],['Vaso Económico 350ml',0.48,-11.8],['Base ondas 500ml',2.3,-1.1]];
+const VISTAS={
+ 'Global':{sub:'Negocio total · Ene–May 2026',kpis:[['Ventas netas','$56.4M','alert','−3% YoY · −18% plan'],['Margen bruto','53.2%','good',''],['EBITDA','8.8%','alert','meta 30%']],chart:{t:'bar',labels:['Retail','Mayoreo','Catálogo'],data:[51.4,3.1,1.9],lab:'Ventas $M'},det:[['Retail','91% · motor rentable'],['Mayoreo','6% · destructivo'],['Catálogo','3% · colapsó −61%'],['Top-2 clientes','~74% del ingreso']],lec:'Dos clientes ≈74%; margen bruto sano pero EBITDA 8.8% y capital sin remunerar. Vender mejor, cobrar más rápido, comprometer menos capital.'},
+ 'Retail':{sub:'Canal HD + Retail',kpis:[['Ventas est.','$51.4M','','91% del total'],['vs Plan','−10%','alert',''],['Margen neto','~16%','',''],['KAMs','Espinosa+Juárez','','~87% cartera']],chart:{t:'bar',labels:['Prichos','N.Walmart','Tres B','Chedraui','Casa Ley','Soriana'],data:[28.1,13.5,5.1,1.7,1.0,1.0],lab:'Ventas $M (est.)'},det:[['Motor del negocio','rentable y ancla'],['Riesgo','concentración Prichos+NWM'],['Clientes sanos','3B +18%, WM +3.1%, Chedraui +2.7%'],['Acción','proteger anaquel y margen']],lec:'Retail sostiene el negocio y llega cerca del plan. La agenda: proteger rentabilidad y diversificar la base (Tres B, Chedraui, Casa Ley) sin perder a los anclas.'},
+ 'Mayoreo':{sub:'Canal Mayoreo / Exportación',kpis:[['Ventas est.','$3.1M','','6% del total'],['vs Plan','−54%','alert',''],['Margen','Destructivo','alert','Óscar Granados −15%'],['KAM','J. Leónides','','+ Hernández']],chart:{t:'bar',labels:['DSW','Gutza','Mercadotecnia','Óscar Granados'],data:[1.3,1.3,2.0,0.7],lab:'Ventas $M (est.)'},det:[['Problema','vende sin precio mínimo'],['Óscar Granados','−15% margen (destruye caja)'],['DSW','mejor margen (29%)'],['Acción','F10: piso de precio o congelar']],lec:'Mayoreo va −54% vs plan y destruye margen cuando se escala sin precio. Congelar lo destructivo (F10); crecer solo con piso de precio aprobado por CFO.'},
+ 'Catálogo':{sub:'Canal Catálogo / Venta directa',kpis:[['Ventas est.','$1.9M','','3% del total'],['vs Plan','−61%','alert',''],['Margen neto','~20%','good',''],['Dependencia','Avon ~91%','alert','']],chart:{t:'bar',labels:['Avon','House of Fuller'],data:[1.7,0.2],lab:'Ventas $M (est.)'},det:[['Colapso','−61% vs plan'],['Concentración','Avon ≈91% (en reestructura)'],['Margen','sano (20%+)'],['Acción','abrir 2 clientes (E1)']],lec:'Catálogo colapsó (−61%) y depende de Avon (en reestructura Natura). Buen margen pero sin escala: abrir 2 clientes nuevos para diversificar.'},
+ 'Hidratación':{sub:'Segmento Hidratación (~40%)',kpis:[['Peso','39.6%','','el mayor'],['Tendencia','estable','','vs 39.1% 2025'],['Apuesta','Push/Ekuora','good',''],['Alerta','PET arrastra','alert','Peek −0.58%']],chart:{t:'bar',labels:['Peek(−)','Creta','Kool','Gari','Muuk','Elefantito'],data:[11.8,7.2,3.9,4.3,2.2,6.5],lab:'Venta $M'},det:[['Premium','Muuk, Gari, Kool (buen margen)'],['Problema','PET (Peek, Botellín) sin margen'],['Ekuora','8 de 9 SKUs son botellas'],['Acción','corregir precio PET; escalar premium']],lec:'Hidratación es el segmento mayor y la apuesta premium (Ekuora). El PET (Peek, Botellín) arrastra el margen: corregir precio o salir, manteniendo stock por volumen.'},
+ 'Cocina':{sub:'Segmento Cocina (~28%)',kpis:[['Peso','27.7%','alert','baja de 29.8%'],['Tendencia','se contrae','alert',''],['Riesgo','Mayoreo destructivo','alert',''],['Alerta','Jarra 2L −4.1%','alert','']],chart:{t:'bar',labels:['Quesa-bite','Snap-bite','Jarra 2L(−)','Contenedores','Quesadillera'],data:[4.2,3.3,6.2,4.1,0.9],lab:'Venta $M'},det:[['Único que se contrae','−2.1 pp vs 2025'],['Lidera','el Mayoreo destructivo'],['Jarra 2L','no cubre gasto (−4.1%)'],['Acción','revisar precio/mezcla']],lec:'Cocina es el único segmento que se contrae y concentra el Mayoreo destructivo. La Jarra 2L (alto volumen) no cubre su gasto: doble agenda de stock + precio.'},
+ 'Organización':{sub:'Segmento Organización (~27%)',kpis:[['Peso','26.7%','good','sube de 25.4%'],['Tendencia','crece','good',''],['Diferenciador','Copal / Mimbre','good',''],['Margen','el mejor','good','22-28%']],chart:{t:'bar',labels:['Portautensilios','Canastilla mimbre','Organiz. Copal','Charola','Canasta Copal'],data:[7.0,8.1,4.1,3.6,1.7],lab:'Venta $M'},det:[['Crece','+1.3 pp vs 2025'],['Diferenciador','líneas Copal y Mimbre'],['Margen','el más alto del portafolio'],['Acción','empujar; es la ventaja defendible']],lec:'Organización crece y es la casa del diferenciador de Porta (Copal/Mimbre), con el mejor margen. Es donde apostar para subir mezcla y rentabilidad.'},
+ 'E. Espinosa':{sub:'KAM Retail · Elizabeth Espinosa',kpis:[['Mix KAM','~68%','alert','sube de 62.5%'],['Canal','Retail',''],['Cartera','la más grande','alert','riesgo de persona'],['Acción','plan de continuidad','','']],chart:{t:'bar',labels:['E. Espinosa','H. Juárez','J. Leónides','V. Rojo'],data:[68,19,8,5],lab:'Mix KAM %'},det:[['Concentra','~68% del mix de KAM'],['Riesgo','dependencia de una persona'],['Acción','segundo KAM / plan de relevo'],['Comisión','a margen y a cobrado (F3)']],lec:'E. Espinosa concentra ~68% de la venta por KAM: máximo riesgo de continuidad por persona. Plan de relevo y comisiones a margen neto/cobrado.'},
+ 'H. Juárez':{sub:'KAM Retail · Heriberto Juárez',kpis:[['Mix KAM','~19%','','Retail'],['Canal','Retail',''],['Cartera','2º Retail',''],['Acción','crecer base','','']],chart:{t:'bar',labels:['E. Espinosa','H. Juárez','J. Leónides','V. Rojo'],data:[68,19,8,5],lab:'Mix KAM %'},det:[['Segundo KAM Retail',''],['Junto con Espinosa','~87% cartera Retail'],['Acción','balancear cartera'],['Comisión','a margen y a cobrado (F3)']],lec:'Juárez + Espinosa concentran ~87% de la cartera Retail. Balancear la cartera reduce el riesgo de persona.'},
+ 'J. Leónides':{sub:'KAM Mayoreo / Exportación',kpis:[['Canal','Mayoreo','',''],['Ventas','$3.1M','alert','−54% plan'],['Margen','destructivo','alert',''],['KAM JR','L. Hernández','','Plastiquim']],chart:{t:'bar',labels:['DSW','Gutza','Mercadotecnia','Óscar Granados'],data:[1.3,1.3,2.0,0.7],lab:'Ventas $M'},det:[['Canal Mayoreo','−54% vs plan'],['Óscar Granados','−15% (destruye caja)'],['Acción','F10: piso de precio'],['Marca','Plastiquim']],lec:'Mayoreo/Export bajo Leónides va −54% y destruye margen sin precio mínimo. Congelar lo destructivo y escalar solo con piso de precio.'},
+ 'V. Rojo':{sub:'KAM Catálogo · Valerie Rojo',kpis:[['Canal','Catálogo','',''],['Ventas','$1.9M','alert','−61% plan'],['Margen neto','~20%','good',''],['Dependencia','Avon 91%','alert','']],chart:{t:'bar',labels:['Avon','House of Fuller'],data:[1.7,0.2],lab:'Ventas $M'},det:[['Catálogo','−61% vs plan'],['Avon','≈91% (reestructura)'],['Margen','sano (20%+)'],['Acción','abrir 2 clientes (E1)']],lec:'Catálogo (Rojo) buen margen pero sin escala y dependiente de Avon. Diversificar con 2 clientes nuevos.'}
+};
+// ---------- CLIENTES (drill por cliente) ----------
+const RACd='RAC/GM ROI son métricas de capital a nivel compañía (RAC neto −0.5 · GM ROI $0.8); no se aíslan por cliente en el tablero. Driver por cliente = términos de pago: Walmart/Prichos a 90 días es la mayor presión de RAC.';
+const CLIENTES={
+ 'Prichos':{sub:'Cliente #1 · Retail (Walmart) · venta real Ene–May',kpis:[['Venta 2026','$31.8M','','peso 49.8% (era 44.9%)'],['Margen 2026','16.0%','',''],['Ticket','$13.4','',''],['Mercado SSS','+3.1%','good','Walmart sano']],chart:{labels:['Prichos','Prom. Porta'],data:[16.0,16],lab:'Margen %'},det:[['Venta 2026 (Ene–May)','$31.8M real'],['Peso','44.9% (2025) → 49.8% (2026): MÁS concentrado'],['RAC','90 días = mayor presión'],['Acción','PUSH; crecer margen, no concentración']],lec:'Creció y subió su peso (44.9%→49.8%): el negocio se concentra MÁS en Prichos. Sano en el mercado (+3.1%), pero 90 días presionan el RAC. '+RACd},
+ 'Nueva Walmart':{sub:'Cliente #2 · Retail · venta real Ene–May',kpis:[['Venta 2026','$15.4M','','peso 24.0%'],['Margen 2026','7.5%','alert','cayó de 14%'],['Ticket','$17.6','',''],['Mercado SSS','+3.1%','good','']],chart:{labels:['N.Walmart','Prom. Porta'],data:[7.5,16],lab:'Margen %'},det:[['Venta 2026','$15.4M real'],['Peso','23.5% → 24.0% (estable)'],['Margen','CAYÓ a 7.5% (era 14%)'],['Acción','recuperar margen: mezcla/cargos']],lec:'Volumen estable (24%) pero el margen se desplomó a 7.5% (de 14% en 2025): foco de recuperación de rentabilidad, no de volumen. '+RACd},
+ 'Tiendas Tres B':{sub:'Hard discount · Retail · venta real Ene–May',kpis:[['Venta 2026','$4.6M','','peso 7.1%'],['Margen 2026','23.9%','good',''],['Ticket','$17.2','',''],['Mercado SSS','+18%','good','la estrella']],chart:{labels:['Tres B','Prom. Porta'],data:[23.9,16],lab:'Margen %'},det:[['Venta 2026','$4.6M real'],['Peso','9.4% → 7.1%: PERDIMOS peso'],['Mercado','+18% SSS (el que más crece)'],['Acción','PUSH: recuperar peso con valor']],lec:'Paradoja: el cliente que más crece en el mercado (+18%) y nos da buen margen (23.9%), pero PERDIMOS peso (9.4%→7.1%). Recuperar con SKUs de valor/marca propia. '+RACd},
+ 'Avon':{sub:'Catálogo · venta real Ene–May',kpis:[['Venta 2026','$1.7M','','peso 2.7%'],['Margen 2026','28.9%','good',''],['Ticket','$26.8','',''],['Mercado','reestr.','alert','Natura']],chart:{labels:['Avon','Prom. Porta'],data:[28.9,16],lab:'Margen %'},det:[['Venta 2026','$1.7M real'],['Peso','5.5% → 2.7%: CAE a la mitad'],['Situación','reestructura Natura'],['Acción','diversificar Catálogo (E1)']],lec:'Buen margen (28.9%) pero cayó fuerte (peso 5.5%→2.7%) y Avon está en reestructura. Urge abrir clientes de Catálogo. '+RACd},
+ 'Chedraui':{sub:'Retail (autoservicio) · venta real Ene–May',kpis:[['Venta 2026','$1.6M','','peso 2.5%'],['Margen 2026','17.6%','','subió de 5.4%'],['Ticket','$14.5','',''],['Mercado SSS','+2.7%','good','Méx']],chart:{labels:['Chedraui','Prom. Porta'],data:[17.6,16],lab:'Margen %'},det:[['Venta 2026','$1.6M real'],['Peso','3.9% → 2.5%: perdimos peso'],['Margen','MEJORÓ a 17.6% (era 5.4%)'],['Acción','recuperar volumen rentable']],lec:'Mejoró mucho su margen para Porta (5.4%→17.6%) y crece en su mercado (+2.7%), pero perdimos peso. Recuperar volumen ahora que es rentable. '+RACd},
+ 'Soriana':{sub:'Retail (autoservicio) · venta real Ene–May',kpis:[['Venta 2026','$0.7M','','peso 1.0%'],['Margen 2026','22.8%','','subió'],['Ticket','$36.5','',''],['Mercado SSS','−2.7%','alert','contraída']],chart:{labels:['Soriana','Prom. Porta'],data:[22.8,16],lab:'Margen %'},det:[['Venta 2026','$0.7M real'],['Peso','2.8% → 1.0%: CAE fuerte'],['Mercado','−2.7% (contraída)'],['Acción','DE-RISK; no apostar volumen']],lec:'Cayó fuerte con nosotros (2.8%→1.0%) y está contraída en su mercado (−2.7%). Aunque el margen mejoró, no apostar crecimiento; vigilar términos. '+RACd},
+ 'Casa Ley':{sub:'Retail regional NW · venta real Ene–May',kpis:[['Venta 2026','$0.4M','','peso 0.6%'],['Margen 2026','42.8%','good','el mejor'],['Ticket','$24.8','',''],['Mercado SSS','—','','s/dato']],chart:{labels:['Casa Ley','Prom. Porta'],data:[42.8,16],lab:'Margen %'},det:[['Venta 2026','$0.4M real'],['Peso','1.7% → 0.6%: cae'],['Margen','el mejor (42.8%)'],['Acción','levantar SSS; recuperar volumen']],lec:'El mejor margen del top (42.8%) pero cayó su peso (1.7%→0.6%). Sin dato público de mercado: levantar y recuperar volumen rentable. '+RACd},
+ 'House of Fuller':{sub:'Catálogo premium · venta real Ene–May',kpis:[['Venta 2026','$0.6M','','peso 0.9%'],['Margen 2026','37.6%','good',''],['Ticket','$25.6','',''],['Mercado SSS','—','','s/dato']],chart:{labels:['Fuller','Prom. Porta'],data:[37.6,16],lab:'Margen %'},det:[['Venta 2026','$0.6M real'],['Peso','1.1% → 0.9%'],['Margen','muy bueno (37.6%)'],['Acción','confirmar tamaño/potencial']],lec:'Margen alto (37.6%) en Catálogo; jugador menor y estable. Confirmar potencial. '+RACd},
+ 'Grupo Comercial DSW':{sub:'Mayoreo · venta real Ene–May',kpis:[['Venta 2026','$0.9M','','peso 1.4%'],['Margen 2026','29.8%','good','mejor margen'],['Ticket','$21.7','',''],['Mercado SSS','—','','s/dato']],chart:{labels:['DSW','Prom. Porta'],data:[29.8,16],lab:'Margen %'},det:[['Venta 2026','$0.9M real'],['Peso','0.6% → 1.4%: CRECIÓ'],['Margen','el mejor de mayoreo (29.8%)'],['Acción','crecer si sostiene margen']],lec:'Creció (0.6%→1.4%) con el mejor margen de mayoreo (29.8%). Empujar mientras sostenga precio. '+RACd},
+ 'Gutza Import':{sub:'Mayoreo · venta real Ene–May',kpis:[['Venta 2026','$0.9M','','peso 1.5%'],['Margen 2026','16.7%','',''],['Ticket','$16.2','',''],['Mercado SSS','—','','s/dato']],chart:{labels:['Gutza','Prom. Porta'],data:[16.7,16],lab:'Margen %'},det:[['Venta 2026','$0.9M real'],['Peso','0.7% → 1.5%: creció'],['Margen','medio (16.7%)'],['Acción','vigilar precio (F10)']],lec:'Creció en mayoreo con margen medio (16.7%). Vigilar precio para no caer en mayoreo destructivo. '+RACd},
+ 'Óscar Granados':{sub:'Mayoreo · ALERTA · venta real Ene–May',kpis:[['Venta 2026','$0.7M','alert','peso 1.0%'],['Margen 2026','−33%','alert','destruye'],['Ticket','$7.9','alert',''],['Mercado SSS','—','','']],chart:{labels:['Ó.Granados','Prom. Porta'],data:[-33,16],lab:'Margen %'},det:[['Venta 2026','$0.7M real'],['Peso','0.3% → 1.0%: CRECIÓ lo malo'],['Margen','−33% (era +17% en 2025)'],['Acción','F10: precio mínimo o congelar']],lec:'Empeoró drásticamente: de +17% (2025) a −33% (2026) y CRECIÓ su peso. Destruye margen y caja. Congelar o precio mínimo CFO (F10). '+RACd}
+};
+Object.assign(VISTAS,CLIENTES);
+// ---------- POPULATE (sin depender de Chart) ----------
+function fill(){
+ try{
+  const cls=m=>m<12?'neg':(m>=25?'posv':'');
+  const ct=document.getElementById('clientMarket');
+  const pillc={push:'push',hold:'hold',risk:'risk'},pillt={push:'PUSH',hold:'HOLD',risk:'DE-RISK'};
+  market.forEach(r=>{const m=parseFloat(r[4]);const mc=m<12?'neg':(m>=25?'posv':'');const sc=r[5].includes('−')?'neg':(r[5].includes('+')?'posv':'');ct.innerHTML+=`<tr><td>${r[0]}</td><td class="r">${r[1]}</td><td class="c">${r[2]}</td><td class="c">${r[3]}</td><td class="r ${mc}">${r[4]}</td><td class="r ${sc}">${r[5]}</td><td class="c"><span class="pill ${pillc[r[6]]}">${pillt[r[6]]}</span> ${r[7]}</td></tr>`;});
+  const wt=document.getElementById('winTable');winners.forEach(r=>wt.innerHTML+=`<tr><td>${r[0]}</td><td class="r">$${r[1]}M</td><td class="r posv">${r[2]}%</td></tr>`);
+  const lt=document.getElementById('loseTable');losers.forEach(r=>lt.innerHTML+=`<tr><td>${r[0]}</td><td class="r">$${r[1]}M</td><td class="r neg">${r[2]}%</td></tr>`);
+ }catch(e){console.warn(e);}
+}
+// ---------- EXPLORADOR ----------
+let expChartObj=null;
+function renderVista(v){
+ const d=VISTAS[v];if(!d)return;
+ document.getElementById('expTitle').textContent=v+(v==='Global'?' — negocio total':'');
+ document.getElementById('expSub').textContent=d.sub;
+ document.getElementById('expKpis').innerHTML=d.kpis.map(k=>`<div class="kpi ${k[2]||''}"><div class="lbl">${k[0]}</div><div class="val">${k[1]}</div><div class="delta ${k[3]&&k[3].includes('crít')||k[3]&&k[3].includes('meta')?'down':''}">${k[3]||''}</div></div>`).join('');
+ document.getElementById('expDetalle').innerHTML='<table><tbody>'+d.det.map(x=>`<tr><td><b>${x[0]}</b></td><td>${x[1]}</td></tr>`).join('')+'</tbody></table>';
+ document.getElementById('expLectura').innerHTML='<b>Lectura. </b>'+d.lec;
+ if(window.Chart){
+  const ctx=document.getElementById('expChart');
+  if(expChartObj)expChartObj.destroy();
+  const colors=d.chart.data.map(x=>x<0?C.crit:(v==='Global'?[C.navy,C.orange,C.grey]:C.teal));
+  expChartObj=new Chart(ctx,{type:'bar',data:{labels:d.chart.labels,datasets:[{label:d.chart.lab,data:d.chart.data.map(Math.abs),backgroundColor:Array.isArray(colors[0])?colors[0]:colors,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:d.chart.lab}},indexAxis:d.chart.labels.length>4?'y':'x'}});
+ }
+}
+function wireChips(){
+ document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on');renderVista(c.dataset.v);
+ }));
+}
+// ---------- STATIC CHARTS ----------
+function buildCharts(){
+ if(!window.Chart)return;
+ Chart.defaults.font.family="Montserrat, sans-serif";Chart.defaults.color="#4a5862";Chart.defaults.font.size=11;
+ const bo={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:12,padding:9}}}};
+ const mk=(id,cfg)=>{const el=document.getElementById(id);if(el)new Chart(el,cfg);};
+ mk('channelBar',{type:'bar',data:{labels:['Retail (HD+Retail)','Mayoreo','Catálogo'],datasets:[{label:'Plan',data:[57.05,6.77,4.91],backgroundColor:C.grey,borderRadius:5},{label:'Real (est.)',data:[51.4,3.1,1.9],backgroundColor:C.orange,borderRadius:5}]},options:{...bo,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': $'+c.parsed.y+'M'}}},scales:{y:{ticks:{callback:v=>'$'+v+'M'}}}}});
+ mk('clientPie',{type:'doughnut',data:{labels:clients.map(c=>c[0]),datasets:[{data:clients.map(c=>c[1]),backgroundColor:[C.navy,C.orange,C.teal,'#8FB3C4','#B9C4CE','#A9B6C2','#C9D2DB','#6E8597','#4a5862']}]},options:{...bo,cutout:'55%',plugins:{legend:{position:'right',labels:{boxWidth:11,padding:6,font:{size:10}}},tooltip:{callbacks:{label:c=>c.label+': '+c.parsed+'%'}}}}});
+ mk('clientMargin',{type:'bar',data:{labels:clients.map(c=>c[0].replace('Tiendas ','').replace('Grupo Comercial ','').replace('Nueva Walmart','N.Walmart').replace('Óscar Granados','O.Granados').replace('Mercadotecnia','Mktg')),datasets:[{data:clients.map(c=>c[2]),backgroundColor:clients.map(c=>c[2]<12?C.orange:(c[2]>=25?C.teal:C.grey)),borderRadius:4}]},options:{...bo,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>v+'%'}}}}});
+ const bub=[].concat(winners.map(w=>({x:w[1],y:w[2],r:Math.max(6,Math.sqrt(w[1])*4),label:w[0],win:true})),losers.map(l=>({x:l[1],y:l[2],r:Math.max(6,Math.sqrt(l[1])*4),label:l[0],win:false})));
+ mk('bubble',{type:'bubble',data:{datasets:[{label:'Ganadores',data:bub.filter(d=>d.win),backgroundColor:'rgba(46,110,142,.6)',borderColor:C.teal},{label:'No cubre gasto',data:bub.filter(d=>!d.win),backgroundColor:'rgba(217,137,24,.65)',borderColor:C.orange}]},options:{...bo,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.raw.label+': $'+c.raw.x+'M, '+c.raw.y+'%'}}},scales:{x:{title:{display:true,text:'Venta ($M)'}},y:{title:{display:true,text:'Margen neto %'},grid:{color:c=>c.tick.value===0?'#C0392B':'#E2E8EE'}}}}});
+ const vol=[['Botella Peek',0.43],['Base ondas 600/1L',0.056],['Canastilla mimbre',0.087],['Animalitos ZOO',0.12],['Jarra 2L',0.247]];
+ mk('volBar',{type:'bar',data:{labels:vol.map(i=>i[0]),datasets:[{data:vol.map(i=>i[1]),backgroundColor:vol.map(i=>i[1]<0.1?C.orange:C.teal),borderRadius:4}]},options:{...bo,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Cobertura '+c.parsed.x}}},scales:{x:{title:{display:true,text:'Cobertura'}}}}});
+ mk('catPie',{type:'doughnut',data:{labels:['Materia Prima $12.7M','Semiterminado $11.3M','Producto Final $6.7M','Empaque $3.1M'],datasets:[{data:[12.7,11.3,6.7,3.1],backgroundColor:[C.orange,'#E0A95A',C.teal,C.grey]}]},options:{...bo,cutout:'55%',plugins:{legend:{position:'bottom',labels:{boxWidth:11,padding:6,font:{size:10}}}}}});
+ mk('catTrend',{type:'bar',data:{labels:['Marzo','Abril','Mayo'],datasets:[{data:[29.9,34.8,33.9],backgroundColor:C.navy,borderRadius:5}]},options:{...bo,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.parsed.y+'M'}}},scales:{y:{ticks:{callback:v=>'$'+v+'M'}}}}});
+ mk('moldChart',{type:'bar',data:{labels:['Venta ($M)','Utilidad ($M)','Piezas (M)'],datasets:[{label:'Proyección',data:[47.5,9.5,3.1],backgroundColor:C.grey,borderRadius:5},{label:'Real',data:[27.2,4.0,1.9],backgroundColor:C.orange,borderRadius:5}]},options:{...bo,plugins:{legend:{position:'top'}}}});
+ mk('shareBar',{type:'bar',data:{labels:['Importado','Otras','Marca propia','Porta'],datasets:[{label:'% frentes',data:[45,33,15,7],backgroundColor:[C.navy,C.grey,'#B9C4CE',C.orange],borderRadius:5}]},options:{...bo,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'% de frentes'}}},scales:{y:{ticks:{callback:v=>v+'%'}}}}});
+}
+// ---------- INIT ----------
+fill();wireChips();renderVista('Global');
+function start(){buildCharts();renderVista('Global');}
+if(window.Chart){start();}else{window.addEventListener('load',start);setTimeout(start,1500);}
+const secs=[...document.querySelectorAll('section')];const links=[...document.querySelectorAll('#nav a')];
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const a=document.querySelector('#nav a[href="#'+e.target.id+'"]');if(a)a.classList.add('active');}});},{rootMargin:'-40% 0px -55% 0px'});
+secs.forEach(s=>obs.observe(s));
+</script></body></html>
